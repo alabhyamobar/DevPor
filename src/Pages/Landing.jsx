@@ -43,7 +43,6 @@ const Landing = () => {
     const render = (index) => {
       index = Math.floor(index);
 
-
       if (!cache.current[index]) {
         const img = new Image();
         img.src = getFrameSrc(index + 1);
@@ -65,35 +64,25 @@ const Landing = () => {
 
       const scale = Math.max(
         canvasWidth / img.width,
-        canvasHeight / img.height
+        canvasHeight / img.height,
       );
 
       const x = (canvasWidth - img.width * scale) / 2;
       const y = (canvasHeight - img.height * scale) / 2;
 
-      ctx.drawImage(
-        img,
-        x,
-        y,
-        img.width * scale,
-        img.height * scale
-      );
+      ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
 
       currentImage.current = img;
 
       for (let i = 1; i <= 5; i++) {
         const nextIndex = index + i;
 
-        if (
-          nextIndex < TOTAL_FRAMES &&
-          !cache.current[nextIndex]
-        ) {
+        if (nextIndex < TOTAL_FRAMES && !cache.current[nextIndex]) {
           const nextImg = new Image();
           nextImg.src = getFrameSrc(nextIndex + 1);
           cache.current[nextIndex] = nextImg;
         }
       }
-
 
       const keys = Object.keys(cache.current);
       if (keys.length > 100) {
@@ -104,7 +93,6 @@ const Landing = () => {
     setCanvasSize();
 
     window.addEventListener("resize", setCanvasSize);
-
 
     gsap.to(frame.current, {
       current: AUTOPLAY_END,
@@ -146,11 +134,7 @@ const Landing = () => {
 
   return (
     <div className="h-[300vh] relative">
-
-      <canvas
-        ref={canvasRef}
-        className="sticky top-0 w-full h-screen"
-      />
+      <canvas ref={canvasRef} className="sticky top-0 w-full h-screen" />
 
       <Button
         onClick={() => setBoot(!boot)}
@@ -159,7 +143,6 @@ const Landing = () => {
       />
 
       <Windows show={boot} />
-
     </div>
   );
 };

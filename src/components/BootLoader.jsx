@@ -22,57 +22,119 @@ const archLogo = [
   " .`                                 `/"
 ];
 
-const bootLogs = [
-  "[ OK ] Started Load Kernel Modules",
-  "[ OK ] Started Apply Kernel Variables",
-  "[ OK ] Started Network Manager",
-  "[ OK ] Reached target Network",
-  "[ OK ] Started OpenSSH Daemon",
-  "[ OK ] Started Authorization Manager",
-  "[ OK ] Mounted /boot",
-  "[ OK ] Mounted /home",
-  "[ OK ] Started Login Service",
-  "[ OK ] Reached target Graphical Interface",
-  "",
-  "Arch Linux 6.7.4-arch1-1 (tty1)",
-  "",
-  "alabhya login: root",
-  "Password: ********",
-  "",
-  "[root@archlinux ~]# pacman -Syu",
-  ":: Synchronizing package databases...",
-  " core.db downloaded",
-  " extra.db downloaded",
-  " community.db downloaded",
-  "",
-  "[root@archlinux ~]#"
-];
+const bootSequence = [
 
-const BootLoader = () => {
+  "[    0.000000] Linux version 6.7.4-arch1-1 (gcc 13.2.1)",
+  "[    0.012345] Command line: BOOT_IMAGE=/vmlinuz-linux root=/dev/nvme0n1p2 rw quiet",
+  "[    0.023456] x86/fpu: Supporting XSAVE feature 0x001",
+  "[    0.034567] BIOS-provided physical RAM map:",
+  "[    0.045678] RAMDISK: Loaded initramfs",
+
+  "[    0.112233] systemd[1]: system initialization complete",
+
+  "[  OK  ] Created slice User and Session Slice",
+  "[  OK  ] Started Dispatch Password Requests",
+  "[  OK  ] Started Journal Service",
+  "[  OK  ] Started Load Kernel Modules",
+
+  "[  OK  ] Mounted Kernel Configuration File System",
+  "[  OK  ] Mounted POSIX Message Queue File System",
+
+  "[  OK  ] Started Apply Kernel Variables",
+
+  "[  OK  ] Started udev Kernel Device Manager",
+
+  "[  OK  ] Started Network Manager",
+
+  "[  OK  ] Reached target Network",
+
+  "[  OK  ] Started Authorization Manager",
+
+  "[  OK  ] Started Login Service",
+
+  "[  OK  ] Started Hostname Service",
+
+  "[  OK  ] Mounted /boot",
+
+  "[  OK  ] Mounted /home",
+
+  "[  OK  ] Reached target Local File Systems",
+
+  "[  OK  ] Started Update UTMP about System Boot/Shutdown",
+
+  "[  OK  ] Reached target System Initialization",
+
+  "[  OK  ] Started Daily Cleanup of Temporary Directories",
+
+  "[  OK  ] Started Daily rotation of log files",
+
+  "[  OK  ] Started GNOME Display Manager",
+
+  "[  OK  ] Reached target Graphical Interface",
+
+  "",
+
+  "Arch Linux 6.7.4-arch1-1 (tty1)",
+
+  "",
+
+  "archlinux login: root",
+
+  "Password: ********",
+
+  "",
+
+  "Last login: Tue Feb 24 11:42:31 on tty1",
+
+  "",
+
+  "[root@archlinux ~]# uname -a",
+
+  "Linux archlinux 6.7.4-arch1-1 #1 SMP PREEMPT_DYNAMIC x86_64 GNU/Linux",
+
+  "",
+
+  "[root@archlinux ~]# pacman -Syu",
+
+  ":: Synchronizing package databases...",
+
+  " core.db downloaded",
+
+  " extra.db downloaded",
+
+  " community.db downloaded",
+
+  ":: Starting full system upgrade...",
+
+  " there is nothing to do",
+
+  "",
+
+  "[root@archlinux ~]# █"
+
+];
+const BootLoader = ({onComplete}) => {
   const [lines, setLines] = useState([]);
   const [cursor, setCursor] = useState(true);
   const terminalRef = useRef(null);
+  console.log(bootSequence.length);
 
-  // typing animation
   useEffect(() => {
     let i = 0;
 
     const interval = setInterval(() => {
       setLines(prev => {
-        if (i >= bootLogs.length) {
+        if (i >= bootSequence.length) {
           clearInterval(interval);
           return prev;
         }
-        const newLines = [...prev, bootLogs[i]];
-        i++;
-        return newLines;
+        return [...prev, bootSequence[i++]];
       });
-    }, 120);
+    }, 80);
 
     return () => clearInterval(interval);
   }, []);
 
-  // blinking cursor
   useEffect(() => {
     const blink = setInterval(() => {
       setCursor(prev => !prev);
@@ -81,43 +143,98 @@ const BootLoader = () => {
     return () => clearInterval(blink);
   }, []);
 
-  // auto scroll
-  useEffect(() => {
-    if (terminalRef.current) {
-      terminalRef.current.scrollTop =
-        terminalRef.current.scrollHeight;
+ useEffect(() => {
+
+  let i = 0;
+  const halfIndex = Math.floor(bootSequence.length / 2);
+  let hasCalledComplete = false;
+
+  const interval = setInterval(() => {
+
+    setLines(prev => {
+
+      const newLines = [...prev, bootSequence[i]];
+
+      // call onComplete when half printed
+      if (!hasCalledComplete && i >= halfIndex) {
+        hasCalledComplete = true;
+
+        // small delay makes it feel natural
+        setTimeout(() => {
+          onComplete?.();
+        }, 300);
+      }
+
+      return newLines;
+    });
+
+    i++;
+
+    if (i >= bootSequence.length) {
+      clearInterval(interval);
     }
-  }, [lines]);
+
+  }, 80);
+
+  return () => clearInterval(interval);
+
+}, [onComplete]);useEffect(() => {
+
+  let i = 0;
+  const onefourthIndex = Math.floor(bootSequence.length / 4);
+  let hasCalledComplete = false;
+
+  const interval = setInterval(() => {
+
+    setLines(prev => {
+
+      const newLines = [...prev, bootSequence[i]];
+
+      
+      if (!hasCalledComplete && i >= onefourthIndex) {
+        hasCalledComplete = true;
+
+        setTimeout(() => {
+          onComplete?.();
+        }, 300);
+      }
+
+      return newLines;
+    });
+
+    i++;
+
+    if (i >= bootSequence.length) {
+      clearInterval(interval);
+    }
+
+  }, 80);
+
+  return () => clearInterval(interval);
+
+}, [onComplete]);
 
   return (
-    <div className="fixed inset-0 bg-black z-[999]">
+    <div className="w-full h-full rotate-1  bg-black text-green-400 font-mono p-6 overflow-hidden">
 
-      <div
-        ref={terminalRef}
-        className="w-full h-full p-6 font-mono  text-sm md:text-base lg:text-lg"
-      >
+      <div className="text-[#00AEEF] mb-4 leading-tight text-xs md:text-sm">
+        {archLogo.map((line, i) => (
+          <div key={i} className="whitespace-pre">
+            {line}
+          </div>
+        ))}
+      </div>
 
-        {/* Arch Logo */}
-        <div className="text-[#00AEEF] mb-6">
-          {archLogo.map((line, i) => (
-            <div key={i} className="whitespace-pre">
-              {line}
-            </div>
-          ))}
-        </div>
+      
+      <div ref={terminalRef} className="text-xs md:text-sm">
+        {lines.map((line, i) => (
+          <div key={i}>{line}</div>
+        ))}
 
-        {/* Boot logs */}
-        <div className="text-gray-300">
-          {lines.map((line, i) => (
-            <div key={i}>{line}</div>
-          ))}
-
-          {/* cursor */}
-          <span className="text-white">
-            {cursor ? "█" : " "}
-          </span>
-        </div>
-
+        
+        <span className="text-green-400">
+          {cursor ? "█" : " "}
+        </span>
       </div>
 
     </div>

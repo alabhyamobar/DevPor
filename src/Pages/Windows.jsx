@@ -1,33 +1,27 @@
 import React from "react";
 import BootLoader from "../components/BootLoader";
+import { useState } from "react";
 
 const Windows = ({ show }) => {
+  const [bootComplete, setBootComplete] = useState(false);
   if (!show) return null;
+
   return (
-
     <div className="fixed inset-0 z-[50]">
-
       <div
-        className="absolute bg-[]"
+        className="absolute bg-black overflow-hidden"
         style={{
-          left: 0,
-          top: 0,
-          width: "100vw",
-          height: "100vh",
-
-          clipPath: `polygon(504px 49px,1340px 25px,1342px 715px,516px 663px)`
+          left: "504px",
+          top: "25px",
+          width: "838px",
+          height: "690px",
+          clipPath: "polygon(0px 24px, 836px 0px, 838px 690px, 12px 638px)",
         }}
       >
-
-        {/* Content inside screen */}
-        <div className="w-full h-full flex items-center justify-center text-green-400 font-mono">
-          <BootLoader/>
-        </div>
-
+        {bootComplete ? null : (<BootLoader onComplete={() => setBootComplete(true)} />)}
+        
       </div>
-
     </div>
-
   );
 };
 
