@@ -1,17 +1,46 @@
-import React from 'react'
-import PrimaryLoading from './components/PrimaryLoading'
-import { Route, Routes } from 'react-router-dom'
-import Landing from './Pages/Landing'
+import React, { useEffect } from "react";
+import PrimaryLoading from "./components/PrimaryLoading";
+import { Route, Routes } from "react-router-dom";
+import Landing from "./Pages/Landing";
+import Windows from "./Pages/Windows";
+import.meta.env.VITE_BASE_URL;
 
 const App = () => {
-  return (
-    <>
-      <Routes>
-        <Route path='/' element={<PrimaryLoading />} />
-        <Route path='/landing' element={<Landing />} />
-      </Routes>
-    </>
-  )
+
+
+function useClickCoordinates() {
+
+  useEffect(() => {
+
+    const handleClick = (e) => {
+
+      const x = e.clientX;
+      const y = e.clientY;
+
+      console.log("X:", x, "Y:", y);
+
+    };
+
+    window.addEventListener("click", handleClick);
+
+    return () => {
+      window.removeEventListener("click", handleClick);
+    };
+
+  }, []);
+
 }
 
-export default App
+useClickCoordinates();
+  return (
+    <>
+      
+      <Routes>
+        <Route path={"/"} element={<PrimaryLoading />} />
+        <Route path={"/landing"} element={<Landing />} />
+      </Routes>
+    </>
+  );
+};
+
+export default App;

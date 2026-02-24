@@ -1,3 +1,12 @@
 @import "tailwindcss";
 
 /* boot sreen #111F2A */
+
+/* polygon(504px 49px,1340px 25px,1342px 715px,516px 663px) */
+
+/* button path clip-path: polygon(30% 8%, 74% 8%, 100% 50%, 89% 81%, 11% 81%, 0% 50%); */
+
+.clipped{
+    clip-path: polygon(31% 9%, 71% 9%, 100% 50%, 86% 83%, 16% 83%, 0 50%);
+    border: 4ppx solid black;
+}
