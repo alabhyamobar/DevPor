@@ -21,7 +21,7 @@ const Landing = () => {
   const [boot, setBoot] = useState(false);
 
   const getFrameSrc = (index) =>
-    `/frames/webp/frame_${index.toString().padStart(4, "0")}.webp`;
+    `/devpor/frames/webp/frame_${index.toString().padStart(4, "0")}.webp`;
 
   useEffect(() => {
     const canvas = canvasRef.current;

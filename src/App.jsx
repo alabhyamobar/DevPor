@@ -36,8 +36,8 @@ useClickCoordinates();
     <>
       
       <Routes>
-        <Route path={"/"} element={<PrimaryLoading />} />
-        <Route path={"/landing"} element={<Landing />} />
+        <Route path={"/devpor/"} element={<PrimaryLoading />} />
+        <Route path={"/devpor/landing"} element={<Landing />} />
       </Routes>
     </>
   );
