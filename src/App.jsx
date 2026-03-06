@@ -3,6 +3,7 @@ import PrimaryLoading from "./components/PrimaryLoading";
 import { Route, Routes } from "react-router-dom";
 import Landing from "./Pages/Landing";
 import Windows from "./Pages/Windows";
+import Desktop from "./Pages/Desktop";
 import.meta.env.VITE_BASE_URL;
 
 const App = () => {
@@ -38,6 +39,7 @@ useClickCoordinates();
       <Routes>
         <Route path={"/devpor/"} element={<PrimaryLoading />} />
         <Route path={"/devpor/landing"} element={<Landing />} />
+        <Route path ={"/devpor/desktop"} element={<Desktop/>}/>
       </Routes>
     </>
   );

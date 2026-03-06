@@ -1,6 +1,7 @@
 import React from "react";
 import BootLoader from "../components/BootLoader";
 import { useState } from "react";
+import ArchWindow from "../components/ArchWindow";
 
 const Windows = ({ show }) => {
   const [bootComplete, setBootComplete] = useState(false);
@@ -19,6 +20,7 @@ const Windows = ({ show }) => {
         }}
       >
         {bootComplete ? null : (<BootLoader onComplete={() => setBootComplete(true)} />)}
+        {bootComplete ? (<ArchWindow />) : null}
         
       </div>
     </div>
