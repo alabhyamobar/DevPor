@@ -154,12 +154,9 @@ const BootLoader = ({onComplete}) => {
     setLines(prev => {
 
       const newLines = [...prev, bootSequence[i]];
-
-      // call onComplete when half printed
       if (!hasCalledComplete && i >= halfIndex) {
         hasCalledComplete = true;
 
-        // small delay makes it feel natural
         setTimeout(() => {
           onComplete?.();
         }, 300);
@@ -215,7 +212,7 @@ const BootLoader = ({onComplete}) => {
 }, [onComplete]);
 
   return (
-    <div className="w-full h-full rotate-1  bg-black text-green-400 font-mono p-6 overflow-hidden">
+    <div className="w-full h-full rotate-1  bg-[#101D29] text-green-400 font-mono p-6 overflow-hidden">
 
       <div className="text-[#00AEEF] mb-4 leading-tight text-xs md:text-sm">
         {archLogo.map((line, i) => (

@@ -20,7 +20,7 @@ const ArchWindow = () => {
   return (
     <div className="h-full w-full  relative text-white">
       {!unlocked && (
-        <div className="absolute inset-0 bg-[url('./images/mainbg.jpg')] bg-cover bg-center flex flex-col justify-center items-center  rotate-[1.6deg]">
+        <div className="absolute inset-0 bg-[#101D29] bg-cover bg-center flex flex-col justify-center items-center  rotate-[1.6deg]">
           <div className="bg-black/60 backdrop-blur-md p-10 view border-white border-2 rounded-2xl text-center shadow-2xl">
             <h1 className="text-5xl font-bold mb-8 tracking-widest">
               &lt;A/&gt;
@@ -52,7 +52,7 @@ const ArchWindow = () => {
         </div>
       )}
 
-      {unlocked && navigator("/devpor/desktop")}
+      {unlocked && navigator("/desktop")}
     </div>
   );
 };

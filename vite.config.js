@@ -6,5 +6,15 @@ export default defineConfig({
   plugins: [
     tailwindcss(),
   ],
-  base: "/devpor/",
+
+
+  build: {
+    commonjsOptions: {
+      transformMixedEsModules: true
+    },
+
+  server:{
+    host:true,
+  }  
+}
 })
