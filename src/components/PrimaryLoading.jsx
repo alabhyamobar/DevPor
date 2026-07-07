@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { Terminal, Shield, Play, TerminalSquare } from "lucide-react";
+import { Terminal, Shield, Play } from "lucide-react";
 
 const archLogo = [
   "                  -`",
@@ -108,7 +108,6 @@ const PrimaryLoading = () => {
       currentVal = Math.min(currentVal + increment, 100);
       setProgress(currentVal);
 
-      
       if (currentVal <= 70) {
         const linesToShow = Math.floor((currentVal / 70) * bootSequence.length);
         setLines(bootSequence.slice(0, linesToShow));
@@ -137,70 +136,17 @@ const PrimaryLoading = () => {
   const commPct = Math.min(100, Math.floor(Math.max(0, (progress - 90) / 10) * 100));
 
   return (
-    <div className="min-h-screen w-screen bg-[#070514] relative overflow-hidden flex flex-col items-center justify-center font-mono text-slate-100 select-none scanline-overlay">
+    <div className="min-h-screen w-screen bg-[#070514] relative overflow-hidden flex flex-col items-center justify-center font-mono text-slate-200 select-none scanline-overlay">
       
-      <style>{`
-        @keyframes float-slow-1 {
-          0%, 100% { transform: translate(0px, 0px) scale(1); }
-          50% { transform: translate(60px, -40px) scale(1.15); }
-        }
-        @keyframes float-slow-2 {
-          0%, 100% { transform: translate(0px, 0px) scale(1.1); }
-          50% { transform: translate(-50px, 70px) scale(0.95); }
-        }
-        @keyframes float-slow-3 {
-          0%, 100% { transform: translate(0px, 0px) scale(0.95); }
-          50% { transform: translate(40px, 50px) scale(1.1); }
-        }
-        .animate-float-1 {
-          animation: float-slow-1 18s ease-in-out infinite;
-        }
-        .animate-float-2 {
-          animation: float-slow-2 22s ease-in-out infinite;
-        }
-        .animate-float-3 {
-          animation: float-slow-3 15s ease-in-out infinite;
-        }
-        .glass-panel-heavy {
-          background: rgba(16, 29, 41, 0.85);
-          backdrop-filter: blur(20px);
-          border: 2px solid rgba(255, 255, 255, 0.15);
-        }
-        .scanline-overlay::after {
-          content: " ";
-          display: block;
-          position: absolute;
-          top: 0; left: 0; bottom: 0; right: 0;
-          background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(6, 182, 212, 0.04), rgba(0, 255, 0, 0.01), rgba(6, 182, 212, 0.04));
-          z-index: 99;
-          background-size: 100% 4px, 6px 100%;
-          pointer-events: none;
-        }
-        .terminal-scroll::-webkit-scrollbar {
-          width: 6px;
-        }
-        .terminal-scroll::-webkit-scrollbar-track {
-          background: rgba(0,0,0,0.1);
-        }
-        .terminal-scroll::-webkit-scrollbar-thumb {
-          background: rgba(255,255,255,0.15);
-          border-radius: 4px;
-        }
-      `}</style>
 
       
-      <div className="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] rounded-full bg-purple-900/30 blur-[120px] animate-float-1 pointer-events-none" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[55vw] h-[55vw] rounded-full bg-cyan-900/20 blur-[140px] animate-float-2 pointer-events-none" />
-      <div className="absolute top-[30%] left-[30%] w-[45vw] h-[45vw] rounded-full bg-indigo-900/15 blur-[130px] animate-float-3 pointer-events-none" />
-
-      
-      <div className="w-[92%] max-w-4xl glass-panel-heavy rounded-2xl shadow-2xl relative z-10 overflow-hidden rotate-[1.2deg] skew-x-1 flex flex-col aspect-[4/3] max-h-[85vh]">
+      <div className="w-full h-screen bg-[#101D29]/92 backdrop-blur-md flex flex-col z-10 relative overflow-hidden">
         
         <header className="h-10 bg-[#152331] border-b border-slate-700/60 px-4 flex justify-between items-center text-slate-300 text-xs select-none">
           <div className="flex items-center gap-2">
-            <span className="w-3 h-3 rounded-full bg-[#EF5A5A] shadow-inner" />
-            <span className="w-3 h-3 rounded-full bg-[#E1C340] shadow-inner" />
-            <span className="w-3 h-3 rounded-full bg-[#52C452] shadow-inner" />
+            <span className="w-3 h-3 rounded-full bg-[#EF5A5A]" />
+            <span className="w-3 h-3 rounded-full bg-[#E1C340]" />
+            <span className="w-3 h-3 rounded-full bg-[#52C452]" />
           </div>
           <div className="flex items-center gap-1.5 font-bold font-mono tracking-wide text-cyan-400">
             <Terminal className="w-4 h-4" />
@@ -274,7 +220,7 @@ const PrimaryLoading = () => {
         </div>
 
         
-        <footer className="h-14 bg-[#152331] border-t border-slate-700/60 px-5 flex justify-between items-center z-10">
+        <footer className="h-16 bg-[#152331] border-t border-slate-700/60 px-5 flex justify-between items-center z-10">
           <button
             onClick={() => setDisclaimerOpen(true)}
             className="flex items-center gap-2 border border-yellow-500/40 hover:border-yellow-400 bg-yellow-950/20 hover:bg-yellow-900/30 px-4 py-2 rounded-lg text-yellow-400 text-xs font-semibold tracking-wider transition-all duration-300 shadow-md cursor-pointer"
@@ -286,13 +232,13 @@ const PrimaryLoading = () => {
           {linkComplete ? (
             <button
               onClick={() => navigate("/landing")}
-              className="flex items-center gap-2 border-2 border-cyan-400 bg-cyan-500/10 hover:bg-cyan-400 hover:text-slate-950 px-6 py-2 rounded-lg text-cyan-300 font-extrabold text-xs tracking-widest transition-all duration-300 shadow-lg shadow-cyan-500/30 animate-pulse cursor-pointer"
+              className="flex items-center gap-2 border-2 border-cyan-400 bg-cyan-500/10 hover:bg-cyan-400 hover:text-slate-950 px-6 py-2.5 rounded-lg text-cyan-300 font-extrabold text-xs tracking-widest transition-all duration-300 shadow-lg shadow-cyan-500/30 animate-pulse cursor-pointer animate-none"
             >
               <Play className="w-3.5 h-3.5 fill-current" />
               RUN LINK
             </button>
           ) : (
-            <div className="flex items-center gap-1.5 border border-slate-700/50 bg-slate-800/20 px-5 py-2 rounded-lg text-slate-500 text-xs tracking-wider">
+            <div className="flex items-center gap-1.5 border border-slate-700/50 bg-slate-800/20 px-5 py-2.5 rounded-lg text-slate-500 text-xs tracking-wider">
               <span>SYSTEM BOOTING {progress}%</span>
             </div>
           )}
