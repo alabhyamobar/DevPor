@@ -1,47 +1,96 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { Sparkles, Shield, Play, Volume2, Coffee, Moon } from "lucide-react";
+import { Terminal, Shield, Play, TerminalSquare } from "lucide-react";
+
+const archLogo = [
+  "                  -`",
+  "                 .o+`",
+  "                `ooo/",
+  "               `+oooo:",
+  "              `+oooooo:",
+  "              -+oooooo+:",
+  "            `/:-:++oooo+:",
+  "           `/++++/+++++++:",
+  "          `/++++++++++++++:",
+  "         `/+++ooooooooooooo/`",
+  "        ./ooosssso++osssssso+`",
+  "       .oossssso-````/ossssss+`",
+  "      -osssssso.      :ssssssso.",
+  "     :osssssss/        osssso+++.",
+  "    /ossssssss/        +ssssooo/-",
+  "  `/ossssso+/:-        -:/+osssso+-",
+  " `+sso+:-`                 `.-/+oso:",
+  " `++:.                           `-/+/",
+  " .`                                 `/"
+];
+
+const bootSequence = [
+  "[    0.000000] Linux version 6.7.4-arch1-1 (gcc 13.2.1)",
+  "[    0.012345] Command line: BOOT_IMAGE=/vmlinuz-linux root=/dev/nvme0n1p2 rw quiet",
+  "[    0.023456] x86/fpu: Supporting XSAVE feature 0x001",
+  "[    0.034567] BIOS-provided physical RAM map:",
+  "[    0.045678] RAMDISK: Loaded initramfs",
+  "[    0.112233] systemd[1]: system initialization complete",
+  "[  OK  ] Created slice User and Session Slice.",
+  "[  OK  ] Started Dispatch Password Requests.",
+  "[  OK  ] Started Journal Service.",
+  "[  OK  ] Started Load Kernel Modules.",
+  "[  OK  ] Mounted Kernel Configuration File System.",
+  "[  OK  ] Mounted POSIX Message Queue File System.",
+  "[  OK  ] Started Apply Kernel Variables.",
+  "[  OK  ] Started udev Kernel Device Manager.",
+  "[  OK  ] Started Network Manager.",
+  "[  OK  ] Reached target Network.",
+  "[  OK  ] Started Authorization Manager.",
+  "[  OK  ] Started Login Service.",
+  "[  OK  ] Started Hostname Service.",
+  "[  OK  ] Mounted /boot.",
+  "[  OK  ] Mounted /home.",
+  "[  OK  ] Reached target Local File Systems.",
+  "[  OK  ] Started Update UTMP about System Boot/Shutdown.",
+  "[  OK  ] Reached target System Initialization.",
+  "[  OK  ] Started GNOME Display Manager.",
+  "[  OK  ] Reached target Graphical Interface.",
+  "",
+  "Arch Linux 6.7.4-arch1-1 (tty1)",
+  "",
+  "archlinux login: root",
+  "Password: ********",
+  "",
+  "Last login: Tue Feb 24 11:42:31 on tty1",
+  "",
+  "[root@archlinux ~]# pacman -Syyu --noconfirm",
+];
 
 const PrimaryLoading = () => {
   const [progress, setProgress] = useState(0);
-  const [logs, setLogs] = useState([]);
-  const [currentStep, setCurrentStep] = useState("Brewing tea...");
+  const [lines, setLines] = useState([]);
+  const [cursor, setCursor] = useState(true);
   const [disclaimerOpen, setDisclaimerOpen] = useState(false);
   const [linkComplete, setLinkComplete] = useState(false);
   
   const navigate = useNavigate();
-  const logsEndRef = useRef(null);
+  const consoleEndRef = useRef(null);
 
   const disclaimer =
     "Yeh website poori tarah se mere sapno, imagination, aur countless late-night coding sessions se inspired hai. Har element, har animation, aur har pixel carefully design kiya gaya hai taaki aapko sirf ek website nahi, balki ek experience mile. Agar kahin thodi imperfections dikhe, toh samajh lijiye ki reality abhi bhi perfection ko catch up kar rahi hai. Yeh space meri creativity, learning, aur growth ka digital reflection hai — so scroll kariye, explore kariye, aur iss journey ka hissa baniye.";
 
-  const addLog = (text, type = "normal") => {
-    setLogs((prev) => [...prev, { text, type, id: Math.random() }]);
-  };
+  useEffect(() => {
+    if (consoleEndRef.current) {
+      consoleEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [lines, progress]);
 
   useEffect(() => {
-    if (logsEndRef.current) {
-      logsEndRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [logs]);
+    const cursorBlink = setInterval(() => {
+      setCursor((prev) => !prev);
+    }, 500);
+    return () => clearInterval(cursorBlink);
+  }, []);
 
   useEffect(() => {
     let currentVal = 0;
     
-    const logPool = [
-      { text: "Tuning ambient synthesizers...", type: "sys" },
-      { text: "Dimming workspace lighting...", type: "sys" },
-      { text: "Brewing warm green tea (late_night.sys)...", type: "tea" },
-      { text: "Softening contrast and neon borders...", type: "sys" },
-      { text: "Aligning stars in creative orbit...", type: "star" },
-      { text: "Injecting lo-fi frequencies...", type: "sys" },
-      { text: "Warming up WebGL geometries...", type: "sys" },
-      { text: "Ensuring dream index level is optimal...", type: "sys" },
-      { text: "Space synchronized. Welcome, developer.", type: "success" },
-    ];
-
-    addLog("Initializing chill workspace...", "sys");
-
     const interval = setInterval(() => {
       let increment = 1;
       if (currentVal < 30) {
@@ -56,41 +105,39 @@ const PrimaryLoading = () => {
         increment = Math.floor(Math.random() * 2) + 1;
       }
 
-      const prevVal = currentVal;
       currentVal = Math.min(currentVal + increment, 100);
       setProgress(currentVal);
 
-      if (currentVal >= 10 && prevVal < 10) addLog(logPool[0].text, logPool[0].type);
-      if (currentVal >= 22 && prevVal < 22) addLog(logPool[1].text, logPool[1].type);
-      if (currentVal >= 38 && prevVal < 38) addLog(logPool[2].text, logPool[2].type);
-      if (currentVal >= 50 && prevVal < 50) addLog(logPool[3].text, logPool[3].type);
-      if (currentVal >= 64 && prevVal < 64) addLog(logPool[4].text, logPool[4].type);
-      if (currentVal >= 75 && prevVal < 75) addLog(logPool[5].text, logPool[5].type);
-      if (currentVal >= 85 && prevVal < 85) addLog(logPool[6].text, logPool[6].type);
-      if (currentVal >= 88 && prevVal < 88) addLog("Checking tea temperature... Still hot.", "tea");
-      if (currentVal >= 94 && prevVal < 94) addLog(logPool[7].text, logPool[7].type);
       
-      if (currentVal < 25) setCurrentStep("Warming up system core...");
-      else if (currentVal < 50) setCurrentStep("Reading design manifesto...");
-      else if (currentVal < 75) setCurrentStep("Tuning audio frequencies...");
-      else if (currentVal < 90) setCurrentStep("Gathering late night thoughts...");
-      else if (currentVal < 100) setCurrentStep("Calibrating workspace link...");
-      else {
-        setCurrentStep("Link complete. Ready to enter.");
-        addLog(logPool[8].text, logPool[8].type);
+      if (currentVal <= 70) {
+        const linesToShow = Math.floor((currentVal / 70) * bootSequence.length);
+        setLines(bootSequence.slice(0, linesToShow));
+      } else {
+        setLines(bootSequence);
+      }
+
+      if (currentVal === 100) {
         setLinkComplete(true);
         clearInterval(interval);
       }
-    }, 80);
+    }, 85);
 
     return () => clearInterval(interval);
   }, []);
 
-  const circum = 2 * Math.PI * 65;
-  const strokeOffset = circum - (progress / 100) * circum;
+  const drawBar = (pct) => {
+    const width = 20;
+    const filled = Math.floor((pct / 100) * width);
+    const empty = width - filled;
+    return `[${"=".repeat(filled)}${filled < width ? ">" : ""}${" ".repeat(Math.max(0, empty - 1))}] ${pct}%`;
+  };
+
+  const corePct = Math.min(100, Math.floor(Math.max(0, (progress - 70) / 10) * 100));
+  const extraPct = Math.min(100, Math.floor(Math.max(0, (progress - 80) / 10) * 100));
+  const commPct = Math.min(100, Math.floor(Math.max(0, (progress - 90) / 10) * 100));
 
   return (
-    <div className="min-h-screen w-screen bg-[#070514] relative overflow-hidden flex flex-col items-center justify-center font-sans text-slate-100 select-none">
+    <div className="min-h-screen w-screen bg-[#070514] relative overflow-hidden flex flex-col items-center justify-center font-mono text-slate-100 select-none scanline-overlay">
       
       <style>{`
         @keyframes float-slow-1 {
@@ -105,10 +152,6 @@ const PrimaryLoading = () => {
           0%, 100% { transform: translate(0px, 0px) scale(0.95); }
           50% { transform: translate(40px, 50px) scale(1.1); }
         }
-        @keyframes pulse-slow {
-          0%, 100% { opacity: 0.4; }
-          50% { opacity: 0.8; }
-        }
         .animate-float-1 {
           animation: float-slow-1 18s ease-in-out infinite;
         }
@@ -118,156 +161,152 @@ const PrimaryLoading = () => {
         .animate-float-3 {
           animation: float-slow-3 15s ease-in-out infinite;
         }
-        .animate-pulse-slow {
-          animation: pulse-slow 3s ease-in-out infinite;
-        }
-        .glass-panel {
-          background: rgba(15, 23, 42, 0.45);
-          backdrop-filter: blur(24px);
-          border: 1px solid rgba(255, 255, 255, 0.08);
-        }
         .glass-panel-heavy {
-          background: rgba(11, 10, 22, 0.85);
-          backdrop-filter: blur(32px);
-          border: 1px solid rgba(6, 182, 212, 0.25);
+          background: rgba(16, 29, 41, 0.85);
+          backdrop-filter: blur(20px);
+          border: 2px solid rgba(255, 255, 255, 0.15);
         }
-        .text-glow-cyan {
-          text-shadow: 0 0 15px rgba(34, 211, 238, 0.6);
+        .scanline-overlay::after {
+          content: " ";
+          display: block;
+          position: absolute;
+          top: 0; left: 0; bottom: 0; right: 0;
+          background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(6, 182, 212, 0.04), rgba(0, 255, 0, 0.01), rgba(6, 182, 212, 0.04));
+          z-index: 99;
+          background-size: 100% 4px, 6px 100%;
+          pointer-events: none;
         }
-        .text-glow-purple {
-          text-shadow: 0 0 15px rgba(168, 85, 247, 0.6);
+        .terminal-scroll::-webkit-scrollbar {
+          width: 6px;
         }
-        .glow-circle {
-          box-shadow: 0 0 40px rgba(6, 182, 212, 0.15);
+        .terminal-scroll::-webkit-scrollbar-track {
+          background: rgba(0,0,0,0.1);
+        }
+        .terminal-scroll::-webkit-scrollbar-thumb {
+          background: rgba(255,255,255,0.15);
+          border-radius: 4px;
         }
       `}</style>
 
       
-      <div className="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] rounded-full bg-purple-900/35 blur-[120px] animate-float-1 pointer-events-none" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[55vw] h-[55vw] rounded-full bg-cyan-900/25 blur-[140px] animate-float-2 pointer-events-none" />
-      <div className="absolute top-[30%] left-[30%] w-[45vw] h-[45vw] rounded-full bg-indigo-900/20 blur-[130px] animate-float-3 pointer-events-none" />
+      <div className="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] rounded-full bg-purple-900/30 blur-[120px] animate-float-1 pointer-events-none" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[55vw] h-[55vw] rounded-full bg-cyan-900/20 blur-[140px] animate-float-2 pointer-events-none" />
+      <div className="absolute top-[30%] left-[30%] w-[45vw] h-[45vw] rounded-full bg-indigo-900/15 blur-[130px] animate-float-3 pointer-events-none" />
 
       
-      <main className="w-[90%] max-w-lg glass-panel rounded-3xl p-8 flex flex-col items-center gap-8 shadow-2xl relative z-10">
+      <div className="w-[92%] max-w-4xl glass-panel-heavy rounded-2xl shadow-2xl relative z-10 overflow-hidden rotate-[1.2deg] skew-x-1 flex flex-col aspect-[4/3] max-h-[85vh]">
         
-        <header className="w-full flex items-center justify-between border-b border-white/5 pb-4">
+        <header className="h-10 bg-[#152331] border-b border-slate-700/60 px-4 flex justify-between items-center text-slate-300 text-xs select-none">
           <div className="flex items-center gap-2">
-            <Moon className="w-5 h-5 text-purple-400 animate-pulse" />
-            <span className="text-xs font-bold tracking-widest text-slate-400 uppercase font-mono">
-              Late Night Study Workspace
-            </span>
+            <span className="w-3 h-3 rounded-full bg-[#EF5A5A] shadow-inner" />
+            <span className="w-3 h-3 rounded-full bg-[#E1C340] shadow-inner" />
+            <span className="w-3 h-3 rounded-full bg-[#52C452] shadow-inner" />
           </div>
-          <div className="flex items-center gap-1.5 bg-cyan-500/10 px-2.5 py-1 rounded-full border border-cyan-400/20 text-[10px] text-cyan-300 font-semibold font-mono">
-            <Volume2 className="w-3 h-3 text-cyan-400" />
-            <span>LO-FI CHILL</span>
+          <div className="flex items-center gap-1.5 font-bold font-mono tracking-wide text-cyan-400">
+            <Terminal className="w-4 h-4" />
+            <span>root@archlinux: ~/bootloader</span>
           </div>
+          <div className="w-14" />
         </header>
 
         
-        <div className="flex flex-col items-center py-4 relative w-full">
-          <div className="relative w-40 h-40 flex items-center justify-center rounded-full glow-circle">
-            
-            <svg className="absolute inset-0 w-full h-full -rotate-90">
-              <circle
-                cx="80"
-                cy="80"
-                r="65"
-                className="stroke-slate-800/40 fill-none"
-                strokeWidth="4"
-              />
-              <circle
-                cx="80"
-                cy="80"
-                r="65"
-                className="stroke-cyan-400 fill-none"
-                strokeWidth="4.5"
-                strokeDasharray={circum}
-                strokeDashoffset={strokeOffset}
-                strokeLinecap="round"
-                style={{ transition: "stroke-dashoffset 0.15s ease" }}
-              />
-            </svg>
-            <div className="flex flex-col items-center">
-              <span className="text-3xl font-extrabold text-cyan-300 tracking-tight text-glow-cyan font-mono">
-                {progress}%
-              </span>
-              <span className="text-[9px] tracking-widest text-slate-400 uppercase font-mono mt-1 flex items-center gap-1">
-                <Coffee className="w-2.5 h-2.5 text-amber-400/90" />
-                loading
-              </span>
-            </div>
+        <div className="flex-1 p-6 flex overflow-hidden bg-[#101D29]/95 text-xs text-green-400 font-mono">
+          
+          <div className="hidden md:block text-[#00AEEF] whitespace-pre text-[10px] leading-tight select-none mr-6">
+            {archLogo.map((line, i) => (
+              <div key={i}>{line}</div>
+            ))}
           </div>
 
-          <div className="mt-6 text-center">
-            <p className="text-xs font-semibold text-slate-200 tracking-wide flex items-center justify-center gap-2 font-mono">
-              <span className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-ping" />
-              {currentStep}
-            </p>
+          
+          <div className="flex-1 flex flex-col justify-between overflow-hidden">
+            <div className="flex-1 overflow-y-auto terminal-scroll space-y-1 pr-2">
+              {lines.map((line, i) => {
+                const isOk = line.startsWith("[  OK  ]");
+                return (
+                  <div key={i}>
+                    {isOk ? (
+                      <span>
+                        [ <span className="text-cyan-400 font-bold">OK</span> ]{line.slice(8)}
+                      </span>
+                    ) : (
+                      line
+                    )}
+                  </div>
+                );
+              })}
+
+              
+              {progress >= 70 && (
+                <div className="space-y-1 mt-2 border-t border-cyan-500/20 pt-2 text-[#00AEEF]">
+                  <div>:: Synchronizing package databases...</div>
+                  <div>
+                    {"  "}core.db{"      "}{drawBar(corePct)} ( 133.5 KiB/s )
+                  </div>
+                  {progress >= 80 && (
+                    <div>
+                      {"  "}extra.db{"     "}{drawBar(extraPct)} (   2.4 MiB/s )
+                    </div>
+                  )}
+                  {progress >= 90 && (
+                    <div>
+                      {"  "}community.db{" "}{drawBar(commPct)} (   4.1 MiB/s )
+                    </div>
+                  )}
+                </div>
+              )}
+
+              
+              {progress === 100 && (
+                <div className="space-y-1 mt-2 text-green-400">
+                  <div>:: Starting full system upgrade...</div>
+                  <div className="text-slate-400 font-medium"> there is nothing to do</div>
+                  <div className="flex items-center gap-1 mt-1 text-cyan-400">
+                    <span>[root@archlinux ~]# ./enter_experience.sh</span>
+                    <span className="text-cyan-400 font-bold">{cursor ? "█" : " "}</span>
+                  </div>
+                </div>
+              )}
+
+              <div ref={consoleEndRef} />
+            </div>
           </div>
         </div>
 
         
-        <div className="w-full flex flex-col gap-4">
-          <div className="flex justify-between items-center gap-3">
+        <footer className="h-14 bg-[#152331] border-t border-slate-700/60 px-5 flex justify-between items-center z-10">
+          <button
+            onClick={() => setDisclaimerOpen(true)}
+            className="flex items-center gap-2 border border-yellow-500/40 hover:border-yellow-400 bg-yellow-950/20 hover:bg-yellow-900/30 px-4 py-2 rounded-lg text-yellow-400 text-xs font-semibold tracking-wider transition-all duration-300 shadow-md cursor-pointer"
+          >
+            <Shield className="w-3.5 h-3.5" />
+            READ DISCLAIMER
+          </button>
+
+          {linkComplete ? (
             <button
-              onClick={() => setDisclaimerOpen(true)}
-              className="flex items-center gap-2 border border-slate-700/60 hover:border-slate-600 bg-white/5 hover:bg-white/10 px-4 py-2.5 rounded-xl text-slate-300 text-xs font-semibold tracking-wide transition-all cursor-pointer font-mono"
+              onClick={() => navigate("/landing")}
+              className="flex items-center gap-2 border-2 border-cyan-400 bg-cyan-500/10 hover:bg-cyan-400 hover:text-slate-950 px-6 py-2 rounded-lg text-cyan-300 font-extrabold text-xs tracking-widest transition-all duration-300 shadow-lg shadow-cyan-500/30 animate-pulse cursor-pointer"
             >
-              <Shield className="w-3.5 h-3.5 text-purple-400" />
-              DISCLAIMER STATEMENT
+              <Play className="w-3.5 h-3.5 fill-current" />
+              RUN LINK
             </button>
-
-            {linkComplete ? (
-              <button
-                onClick={() => navigate("/landing")}
-                className="flex items-center gap-2 border border-cyan-400/60 bg-cyan-500/20 hover:bg-cyan-400 hover:text-slate-950 px-6 py-2.5 rounded-xl text-cyan-300 font-extrabold text-xs tracking-wider transition-all duration-300 shadow-lg shadow-cyan-950/40 cursor-pointer font-mono"
-              >
-                <Play className="w-3.5 h-3.5 fill-current" />
-                ENTER SPACE
-              </button>
-            ) : (
-              <div className="flex items-center gap-2 border border-slate-800/80 bg-slate-900/10 px-6 py-2.5 rounded-xl text-slate-500 text-xs font-semibold tracking-wider font-mono">
-                LOCKED
-              </div>
-            )}
-          </div>
-
-          
-          <div className="w-full h-24 bg-slate-950/40 border border-white/5 rounded-xl p-3 font-mono text-[10px] flex flex-col justify-start relative shadow-inner overflow-hidden">
-            <div className="absolute top-1 right-2 text-[8px] text-slate-500 tracking-widest uppercase">System logs</div>
-            <div className="flex-1 overflow-y-auto space-y-1 pr-1 scrollbar-none">
-              {logs.map((log) => (
-                <div key={log.id} className="flex items-start gap-1.5">
-                  <span className="text-cyan-500/50">&gt;</span>
-                  <span
-                    className={
-                      log.type === "tea"
-                        ? "text-amber-300"
-                        : log.type === "star"
-                        ? "text-purple-300 font-bold"
-                        : log.type === "success"
-                        ? "text-cyan-300 font-bold"
-                        : "text-slate-400"
-                    }
-                  >
-                    {log.text}
-                  </span>
-                </div>
-              ))}
-              <div ref={logsEndRef} />
+          ) : (
+            <div className="flex items-center gap-1.5 border border-slate-700/50 bg-slate-800/20 px-5 py-2 rounded-lg text-slate-500 text-xs tracking-wider">
+              <span>SYSTEM BOOTING {progress}%</span>
             </div>
-          </div>
-        </div>
-      </main>
+          )}
+        </footer>
+      </div>
 
       
       {disclaimerOpen && (
         <div className="fixed inset-0 z-[300] bg-black/75 flex items-center justify-center p-4 backdrop-blur-md">
           <div className="w-full max-w-md glass-panel-heavy rounded-2xl shadow-2xl overflow-hidden font-mono flex flex-col relative animate-in zoom-in-95 duration-200">
             
-            <div className="border-b border-cyan-500/20 px-4 py-3 flex justify-between items-center text-cyan-300 text-xs font-bold bg-slate-950/80">
+            <div className="border-b border-cyan-500/20 px-4 py-3 flex justify-between items-center text-cyan-300 text-xs font-bold bg-[#152331]">
               <div className="flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-purple-400" />
+                <Shield className="w-4 h-4 text-yellow-500" />
                 <span>COGNITIVE COMPLIANCE</span>
               </div>
               <button
@@ -279,14 +318,14 @@ const PrimaryLoading = () => {
             </div>
 
             
-            <div className="p-6 flex-1 text-xs text-slate-300 leading-relaxed max-h-[300px] overflow-y-auto pr-3 scrollbar-thin scrollbar-thumb-cyan-500/20">
-              <p className="indent-4 text-justify font-sans text-slate-300 leading-relaxed">
+            <div className="p-6 flex-1 text-xs text-slate-300 leading-relaxed max-h-[300px] overflow-y-auto pr-3 scrollbar-thin scrollbar-thumb-cyan-500/20 bg-[#101D29]">
+              <p className="indent-4 text-justify text-slate-300 leading-relaxed">
                 {disclaimer}
               </p>
             </div>
 
             
-            <div className="bg-slate-950/80 px-4 py-3 border-t border-cyan-500/20 flex justify-end">
+            <div className="bg-[#152331] px-4 py-3 border-t border-cyan-500/20 flex justify-end">
               <button
                 onClick={() => setDisclaimerOpen(false)}
                 className="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs px-4 py-2 rounded-lg transition-all cursor-pointer shadow-md shadow-cyan-950/30"
