@@ -249,7 +249,7 @@ const PrimaryLoading = () => {
 
             {linkComplete ? (
               <button
-                onClick={() => navigate("/devpor/landing")}
+                onClick={() => navigate("/landing")}
                 className="flex items-center gap-2 border-2 border-cyan-400 bg-cyan-500/10 hover:bg-cyan-400 hover:text-[#040814] px-6 py-2.5 rounded-lg text-cyan-400 font-extrabold text-sm tracking-widest transition-all duration-300 shadow-lg shadow-cyan-500/30 animate-pulse glitch-hover cursor-pointer"
               >
                 <Play className="w-4 h-4 fill-current" />
